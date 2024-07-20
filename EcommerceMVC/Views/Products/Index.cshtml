@@ -1,0 +1,154 @@
+﻿@model EcommerceMVC.Models.DTO.ProductsViewModel
+
+@{
+    int categoryId = ViewBag.CategoryId;
+}
+
+<div class="container" style="padding-top: 2%;padding-left: 0;padding-right: 0;">
+    <div class="row align-items-center">
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <img src="~/Images/logo.png" style="width:100%; height: 80px;" alt="Örebro Slott" class="align-center justify-center" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2" style="padding-bottom: 3%;">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="autocomplete">
+                <div style="position: relative;">
+                    <i style="position: absolute;top: 22px;left: 20px;color: black;font-size: 20px;" class="fa fa-search"></i>
+                    <input type="search" id="searchInput" class="form-control filter el-input__inner" placeholder="Search on RedStore" style="width: 100%;height: 65px;margin-top: 6px;text-indent: 40px;" />
+                </div>
+                <ul id="searchResults" class="options" style="display: none;"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Breadcrumb*@
+<ul class="breadcrumb" style="margin-top: 4%;">
+    <li><a href="/Home/Index" style="color:gray;text-decoration:none;">RedStore</a></li>
+    <li style="color:black;">@ViewData["Title"]</li>
+</ul>
+
+<div class="container" style="min-height: 400px;">
+    <div class="row">
+        <div class="col-md-12 col-lg-3 order-md-1 mb-4" style="padding:0;">
+            <div class="vertical-menu">
+                <div class="card">
+                    <ul class="list-group list-group-flush clickable" id="subcategoryList">
+                        <a asp-controller="Products" asp-action="Index" asp-route-id="@categoryId" asp-route-title="@ViewData["Title"]" style="text-decoration:none;">
+                        <li class="list-group-item" style="cursor:pointer;">All</li>
+                        </a>
+                        @foreach (var items in Model.SubCategoryView)
+                        {
+                            <a asp-controller="Products" asp-action="Index" asp-route-subcategoryId="@items.Id" asp-route-id="@categoryId" asp-route-title="@ViewData["Title"]" asp-route-subtitle="@items.Title" style="text-decoration:none;">
+                            <li class="list-group-item subcategory-item" style="cursor:pointer;">@items.Title</li>
+                            </a>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="drop-menu">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                SubCategories
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-flush clickable" id="subcategoryList">
+                                    <a asp-controller="Products" asp-action="Index" asp-route-id="@categoryId" asp-route-title="@ViewData["Title"]" style="text-decoration:none;">
+                                    <li class="list-group-item" style="cursor:pointer;">All</li>
+                                    </a>
+                                    @foreach (var items in Model.SubCategoryView)
+                                    {
+                                        <a asp-controller="Products" asp-action="Index" asp-route-subcategoryId="@items.Id" asp-route-id="@categoryId" asp-route-title="@ViewData["Title"]" asp-route-subtitle="@items.Title" style="text-decoration:none;">
+                                        <li class="list-group-item subcategory-item" style="cursor:pointer;">@items.Title</li>
+                                        </a>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-9 order-md-2" style="padding:0;padding-left: 20px;">
+            <div style="padding-bottom: 54px;">
+                @if (@ViewData["Subtitle"] != null)
+                {
+                    <span style="float:left;font-size: 20px;padding-top: 3px;color: black;">@ViewData["Subtitle"]</span>
+                }
+                else
+                {
+                    <span style="float:left;font-size: 20px;padding-top: 3px;color: black;">@ViewData["Title"]</span>
+                }
+                <span style="float:right">
+                    <select id="sortSelect" class="form-select" onchange="sortProducts()">
+                        <option selected disabled>Sort by Price</option>
+                        <option value="Low">Low to High</option>
+                        <option value="High">High to Low</option>
+                    </select>
+                </span>
+            </div>
+
+            @if (Model.ProductView.Count() == 0)
+            {
+                <div class="container">
+                    <div class="row">
+                        <h5 style="padding: 0;">No Products @ViewData["Subtitle"]</h5>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="container">
+                    <div class="row" id="productContainer">
+                        @foreach (var items in Model.ProductView)
+                        {
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="product-grid">
+                                    <div class="product-image">
+                                        <a href="/Products/ProductDetails/@items.Product_id">
+                                            <img class="pic-1" src="~/Images/products/@items.ProductImage">
+                                            <img class="pic-2" src="~/Images/products/@items.ProductImage">
+                                        </a>
+                                        <a href="/Products/ProductDetails/@items.Product_id" class="fa fa-search product-full-view"></a>
+                                    </div>
+                                    <div class="product-content">
+                                        <h3 class="title">@items.ProductTitle</h3>
+                                        <div class="price">
+                                            @if (@items.Discount_Percent != 0)
+                                            {
+                                                <span style="color: black;">$@items.PriceAfterDiscount</span>
+                                                <span style="color: black;text-decoration: line-through;margin: 0px 5px;">$@items.PricePerUnit</span>
+                                                <span class="product-new-label" style="float:right;color:red;">-@items.Discount_Percent%</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: black;">$@items.PricePerUnit</span>
+                                            }
+                                        </div>
+                                        <a class="add-to-cart" href="/Products/ProductDetails/@items.Product_id">VIEW PRODUCTS</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="scrollToTopBtn">
+    <span>&#8593;</span>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

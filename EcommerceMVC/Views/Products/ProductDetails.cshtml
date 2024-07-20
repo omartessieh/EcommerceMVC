@@ -1,0 +1,306 @@
+﻿@model EcommerceMVC.Models.DTO.ProductsViewModel
+@using EcommerceMVC.Models.Domain
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    bool isAdmin = false;
+    bool isUser = false;
+
+    if (currentUser != null)
+    {
+        isAdmin = await UserManager.IsInRoleAsync(currentUser, "admin");
+        isUser = await UserManager.IsInRoleAsync(currentUser, "user");
+    }
+}
+
+<style>
+    .favorite-btn i.fa-heart {
+        color: #000;
+        transition: color 0.3s ease;
+    }
+
+    .favorite-btn:hover i.fa-heart {
+        color: #000;
+    }
+</style>
+
+<h1>@TempData["success"]</h1>
+
+<ul class="breadcrumb" style="margin-top: 40px;">
+    <li><a href="#" style="color:gray;text-decoration:none;">RedStore</a></li>
+    <li><a href="/Products/Index/@Model.ProductDetail.Category_id?title=@Model.ProductDetail.CategoryTitle" style="color:gray;text-decoration:none;">@Model.ProductDetail.CategoryTitle</a></li>
+    <li>@Model.ProductDetail.SubCategoryTitle</li>
+    <li>@Model.ProductDetail.ProductTitle</li>
+</ul>
+
+<input type="hidden" value="@Model.ProductDetail.Product_id" id="product_id" />
+
+<div class="container mt-5 mb-5" style="padding: 0;">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-6 border-end">
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="main_image">
+                        <img src="~/Images/products/@Model.ProductDetail.ProductImage" id="main_product_image" width="250" height="250">
+                    </div>
+                    <div class="thumbnail_images">
+                        <ul id="thumbnail">
+                            @foreach (var images in @Model.ProductImage)
+                            {
+                                <li>
+                                    <img src="~/Images/products/@images.ImageURL" width="70" style="max-height: 100px;" onclick="changeMainImage(this)">
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="product-dtl" style="padding-right: 10px;padding-left: 10px;">
+                    <div class="product-info">
+                        <div class="product-name">
+                            <div class="row" style="padding-top: 15px;">
+                                <div class="col-10">
+                                    @Model.ProductDetail.ProductTitle
+                                </div>
+                                @if (SignInManager.IsSignedIn(User) && isUser)
+                                {
+                                    <div class="col-2" style="text-align: center;">
+                                        <form id="favoriteForm" method="post">
+                                            <input type="hidden" name="id" value="@Model.ProductDetail.Product_id" />
+                                            <button type="button" class="favorite-btn" style="background: transparent; border: 0;">
+                                                @if (Model.Favorite.Count() > 0)
+                                                {
+                                                    <i id="heartIcon" class="fa-solid fa-heart"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i id="heartIcon" class="fa-regular fa-heart"></i>
+                                                }
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="product-price-discount">
+
+                            @if (Model.ProductDetail.Discount_Percent == 0)
+                            {
+                                <span style="color:black;">$@Model.ProductDetail.PricePerUnit</span>
+                            }
+
+                            @if (Model.ProductDetail.Discount_Percent != 0)
+                            {
+                                <span style="color:black;">$@Model.ProductDetail.PriceAfterDiscount</span>
+                                <span class="line-through">$@Model.ProductDetail.PricePerUnit</span>
+                                <span style="color:red;margin-left: 10px;font-size: 14px;">-@Model.ProductDetail.Discount_Percent%</span>
+                            }
+
+                            @if (Model.OrderDetail.Count() > 0)
+                            {
+                                <span style="margin-left: 10px;font-size: 14px;color: rgb(165, 165, 165);"><b>(@Model.OrderQty of @Model.ProductDetail.Qty) items in stock</b></span>
+                            }
+                            else
+                            {
+                                <span style="margin-left: 10px;font-size: 14px;color: rgb(165, 165, 165);"><b>(@Model.OrderQty) items in stock</b></span>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div style="padding-bottom:@(Model.ProductSize.Count() > 0 || Model.ProductColor.Count() > 0 ? "30px" : "113px");">
+                        <label for="size" style="color: #2469d1;font-weight: 600">Fast Delivery in Lebanon</label>
+
+                        <p style="margin-bottom: 5px;">
+                            <img src="https://images.zoodmall.com/app/appImages/shipping.png" alt="Shipping FeeIcon" class="el-icon-" style="margin-right: 0.4rem; width: 1.5rem;">
+                            <span class="product-shipping-text" style="color:black;">Shipping fee</span>&nbsp;
+                            <b class="product-shipping-text">$10</b>
+                        </p>
+
+                        <p style="margin-bottom: 5px;">
+                            <img src="https://images.zoodmall.com/app/appImages/clock_new.png" alt="Estimated Delivery Icon" class="el-icon-" style="margin-right: 0.4rem; width: 1.5rem;">
+                            <span class="product-shipping-text" style="color:black;">Estimated delivery</span>&nbsp-&nbsp;
+                            <b class="product-shipping-text">10 Days</b>
+                        </p>
+
+                        <p style="margin-bottom: 5px;">
+                            <img src="https://images.zoodmall.com/app/appImages/delivery.png" alt="Home DeliveryIcon" class="el-icon-" style="margin-right: 0.4rem; width: 1.5rem;">
+                            <span class="product-shipping-text" style="color:black;">Home delivery</span>&nbsp;
+                            <b class="product-shipping-text">via - Aramex</b>
+                        </p>
+                    </div>
+
+                    <div class="row" style="padding-bottom:20px;">
+                        @if (Model.ProductSize.Count() > 0)
+                        {
+                            <div class="col-md-6">
+                                <label for="size">Size</label>
+                                <select id="size" name="size" class="form-control">
+                                    @foreach (var size in Model.ProductSize)
+                                    {
+                                        <option value="@size.Size_id">@size.Size</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        @if (Model.ProductColor.Count() > 0)
+                        {
+                            <div class="col-md-6">
+                                <label for="color">Color</label>
+                                <select id="color" name="color" class="form-control">
+                                    @foreach (var colors in Model.ProductColor)
+                                    {
+                                        <option value="@colors.Color_id">@colors.Color</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    </div>
+                    <div class="product-count">
+                        <label for="size">Quantity</label>
+                        <form action="#" class="display-flex" style="padding-bottom: 20px;">
+                            <div class="qty-controls" style="display: flex;align-items: center;">
+                                <div class="qtyminus" style="cursor: pointer;"> -</div>
+                                <input type="text" name="quantity" class="qty" value="1" disabled style="padding: 3px;" id="qty">
+                                <div class="qtyplus" style="cursor: pointer;">+</div>
+                            </div>
+                        </form>
+                        <div class="row" style="padding-bottom: 10px;">
+                            @if (SignInManager.IsSignedIn(User) && isUser)
+                            {
+                                <div class="col-md-6 col-sm-12">
+                                    <button class="btn btn-dark" onclick="ajaxCall()" style="width: 100%; margin-top: 8%;">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-6 col-sm-12">
+                                    <button type="button" class="btn btn-dark disabled" style="width: 100%;margin-top: 8%;"> Add to Cart</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="scrollToTopBtn">
+    <span>&#8593;</span>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+        //Image
+        function changeMainImage(thumbnail) {
+            var mainImage = document.getElementById("main_product_image");
+            mainImage.src = thumbnail.src;
+        }
+
+        //Quantity
+        var quantityInput = document.querySelector('input[name="quantity"]');
+
+        function incrementQuantity() {
+            var currentValue = parseInt(quantityInput.value);
+            var maxQuantity = parseInt('@Model.OrderQty');
+            if (currentValue < maxQuantity) {
+                quantityInput.value = currentValue + 1;
+            }
+        }
+
+        function decrementQuantity() {
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        }
+
+        document.querySelector('.qtyplus').addEventListener('click', incrementQuantity);
+        document.querySelector('.qtyminus').addEventListener('click', decrementQuantity);
+
+        //Toast
+        function ajaxCall() {
+            var sizeInput = document.getElementById("size");
+            var Size_id = sizeInput ? sizeInput.value : 0;
+
+            var colorElement = document.getElementById("color");
+            var Color_id = colorElement ? colorElement.value : 0;
+
+            var Product_id = document.getElementById("product_id").value;
+
+            var Qty = document.getElementById("qty").value;
+
+            var cartitem = { "User_id": "0", "Product_id": Product_id, "Color_id": Color_id, "Size_id": Size_id, "Qty": Qty };
+
+            var productIdInput = document.getElementById("product_id");
+            var productId = productIdInput.value;
+
+            $.ajax({
+                url: '@Url.Action("AddToCart", "User")',
+                type: 'POST',
+                data: { Cartitem: cartitem },
+                success: function (result) {
+                    toastr.options.positionClass = 'toast-bottom-right';
+                    if (result.error) {
+                        toastr.error(result.error);
+                    } else if (result.success) {
+                        toastr.success(result.success);
+
+                        $.ajax({
+                            url: '@Url.Action("GetCartItemCount", "User")',
+                            type: 'GET',
+                            success: function (count) {
+                                $('.badge').text(count);
+                            },
+                            error: function (xhr, status, error) {
+                                toastr.error('Error fetching cart item count.');
+                            }
+                        });
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.options.positionClass = 'toast-bottom-right';
+                    toastr.error('User is not authenticated.');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#favoriteForm').on('click', '.favorite-btn', function (e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                var heartIcon = form.find('i');
+                var isSolid = heartIcon.hasClass('fa-solid');
+
+                $.ajax({
+                    url: isSolid ? '@Url.Action("RemoveFavorite", "User")' : '@Url.Action("AddFavorite", "User")',
+                    type: 'GET',
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (isSolid) {
+                            heartIcon.removeClass('fa-solid').addClass('fa-regular');
+                        } else {
+                            heartIcon.removeClass('fa-regular').addClass('fa-solid');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+}

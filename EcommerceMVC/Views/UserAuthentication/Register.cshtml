@@ -1,0 +1,96 @@
+﻿@model EcommerceMVC.Models.DTO.RegistrationModel
+
+<form class="form-container" asp-action="Register" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-title">
+        <h2>Register</h2>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="First_Name" class="form-control" placeholder="First Name" />
+            <span asp-validation-for="First_Name" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="Last_Name" class="form-control" placeholder="Last Name" />
+            <span asp-validation-for="Last_Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="Username" class="form-control" placeholder="Username" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-6">
+            <input type="email" asp-for="Email" class="form-control" placeholder="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12 col-sm-6">
+            <input type="Password" asp-for="Password" class="form-control" placeholder="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-6">
+            <input type="Password" asp-for="PasswordConfirm" class="form-control" placeholder="Confirm Password" />
+            <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="Country" class="form-control" placeholder="Country" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="Governorate" class="form-control" placeholder="Governorate" />
+            <span asp-validation-for="Governorate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="City" class="form-control" placeholder="City" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="Street" class="form-control" placeholder="Street" />
+            <span asp-validation-for="Street" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12 col-sm-6">
+            <input type="text" asp-for="Building" class="form-control" placeholder="Building" />
+            <span asp-validation-for="Building" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-4">
+            <input type="text" asp-for="PhoneNumber" class="form-control" id="phoneNumberInput" placeholder="Phone Number" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group col-12 col-sm-2">
+            <input type="number" asp-for="Floor" class="form-control" placeholder="Floor" />
+            <span asp-validation-for="Floor" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12">
+            <button type="submit" class="btn btn-dark">Register</button>
+            <a class="btn btn-dark" asp-action="Login" asp-controller="UserAuthentication">Back</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @if (TempData["msg"] != null)
+    {
+        <script>
+            toastr.options.positionClass = 'toast-bottom-right';
+            toastr.error('@TempData["msg"]');
+        </script>
+    }
+}

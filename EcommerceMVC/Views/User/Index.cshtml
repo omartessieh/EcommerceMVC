@@ -1,0 +1,142 @@
+﻿@using EcommerceMVC.Models.DTO
+@model EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .panel {
+        text-align: center;
+        padding-top: 30px;
+    }
+
+        .panel h2 {
+            color: #444444;
+            font-size: 18px;
+            margin: 0 0 8px 0;
+        }
+
+        .panel p {
+            color: #777777;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 24px;
+        }
+
+    .panelimage {
+        padding-top: 0;
+    }
+</style>
+
+<form asp-action="Index" asp-controller="User" style="padding-bottom: 1%;" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="First_Name">First Name</label>
+            <input type="text" asp-for="First_Name" class="form-control" placeholder="First Name" />
+            <span asp-validation-for="First_Name" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Last_Name">Last Name</label>
+            <input type="text" asp-for="Last_Name" class="form-control" placeholder="Last Name" />
+            <span asp-validation-for="Last_Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Username">Username</label>
+            <input type="text" asp-for="Username" class="form-control" placeholder="Username" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Email">Email</label>
+            <input type="email" asp-for="Email" class="form-control" placeholder="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+
+    <input hidden asp-for="Password" class="form-control" />
+    <input hidden asp-for="ConfirmPassword" class="form-control" />
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Country">Country</label>
+            <input type="text" asp-for="Country" class="form-control" placeholder="Country" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Governorate">Governorate</label>
+            <input type="text" asp-for="Governorate" class="form-control" placeholder="Governorate" />
+            <span asp-validation-for="Governorate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="City">City</label>
+            <input type="text" asp-for="City" class="form-control" placeholder="City" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Street">Street</label>
+            <input type="text" asp-for="Street" class="form-control" placeholder="Street" />
+            <span asp-validation-for="Street" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Building">Building</label>
+            <input type="text" asp-for="Building" class="form-control" placeholder="Building" />
+            <span asp-validation-for="Building" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="PhoneNumber">Phone Number</label>
+            <input type="text" asp-for="PhoneNumber" class="form-control" id="phoneNumberInput" placeholder="Phone Number" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-2">
+            <label asp-for="Floor">Floor</label>
+            <input type="number" asp-for="Floor" class="form-control" placeholder="Floor" />
+            <span asp-validation-for="Floor" class="text-danger"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-dark" style="margin-top: 1%;">Update</button>
+</form>
+
+<div id="scrollToTopBtn" style="display:none;">
+    <span>&#8593;</span>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    @if (TempData["smsg"] != null)
+    {
+        <script>
+            toastr.options.positionClass = 'toast-bottom-right';
+            toastr.success('@TempData["smsg"]');
+        </script>
+    }
+
+    @if (TempData["emsg"] != null)
+    {
+        <script>
+            toastr.options.positionClass = 'toast-bottom-right';
+            toastr.error('@TempData["emsg"]');
+        </script>
+
+    }
+
+    <script>
+        //Phone Number
+        document.getElementById('phoneNumberInput').addEventListener('keypress', function (event) {
+            var charCode = event.which ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 8 && charCode !== 37 && charCode !== 39 && charCode !== 46) {
+                event.preventDefault();
+            }
+        });
+    </script>
+}

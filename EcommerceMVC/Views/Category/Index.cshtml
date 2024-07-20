@@ -1,0 +1,167 @@
+﻿<div class="container" style="padding-top: 2%;padding-left: 0;padding-right: 0;">
+    <div class="row align-items-center">
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <img src="~/Images/logo.png" style="width:100%; height: 80px;" alt="Örebro Slott" class="align-center justify-center" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2" style="padding-bottom: 3%;">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="autocomplete">
+                <div style="position: relative;">
+                    <i style="position: absolute;top: 22px;left: 20px;color: black;font-size: 20px;" class="fa fa-search"></i>
+                    <input type="search" id="searchInput" class="form-control filter el-input__inner" placeholder="Search on RedStore" style="width: 100%;height: 65px;margin-top: 6px;text-indent: 40px;" />
+                </div>
+                <ul id="searchResults" class="options" style="display: none;"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Big Discount Carousel TopCarousels*@
+<div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" style="padding-top: 5%;">
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.Carousel.Count; i++)
+        {
+            var carousel = Model.Carousel[i];
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <img src="~/Images/Carousels/@carousel.ImageURL" class="d-block w-100" alt="...">
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden"></span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden"></span>
+    </a>
+</div>
+
+@*Top Categories*@
+<div class="row" style="text-align: center;padding-top:30px;padding-bottom: 15px;">
+    <div class="col-sm">
+        <h3 style="text-decoration: none;height: 47px;color: black;">
+            Categories
+        </h3>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var category in Model.Category)
+    {
+        <div class="col-sm-12 col-md-6 col-lg-3" style="padding-bottom: 2%;">
+            <a asp-controller="Products" asp-action="Index" asp-route-id="@category.Category_id" asp-route-title="@category.Title" style="text-decoration:none;">
+                <div style="outline:none;text-align:center;background-color:hsla(0,0%,85.9%,.12);height:150px;padding:10px;">
+                    <div class="el-image">
+                        <img src="~/Images/Categories/@category.ImageURL" alt="Laptops" width="100" height="90" class="el-image__inner" style="object-fit: contain;">
+                    </div>
+                    <span style="color: black;">@category.Title</span>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+@*Slider Brand Logo*@
+<div class="row" style="text-align: center;padding-top:30px;">
+    <div class="col-sm">
+        <h3 style="text-decoration: none;height: 47px;color: black;">
+            Brands
+        </h3>
+    </div>
+</div>
+
+<div class="container" style="padding-bottom: 30px;">
+    <div class="row blog">
+        <div class="col-md-12">
+            <div id="blogCarousel" class="carousel slide" data-ride="carousel">
+
+                <ol class="carousel-indicators" style="list-style-type: none;">
+                    <li data-target="#blogCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#blogCarousel" data-slide-to="1"></li>
+                    <li data-target="#blogCarousel" data-slide-to="2"></li>
+                    <li data-target="#blogCarousel" data-slide-to="3"></li>
+                </ol>
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row">
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Adidas.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Apple.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Bata.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Beesline.png" alt="Image" style="max-width:100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/BerlingerHaus.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Beston.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Dsp.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Huawei.png" alt="Image" style="max-width:100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Ingco.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Kingston.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Samsung.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Sony.png" alt="Image" style="max-width:100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Toshiba.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Xiaomi.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Nivea.png" alt="Image" style="max-width:100%;">
+                            </div>
+                            <div class="col-md-3" style="text-align: center;">
+                                <img src="~/Images/Brand/Calvin.png" alt="Image" style="max-width:100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="scrollToTopBtn">
+    <span>&#8593;</span>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

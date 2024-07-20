@@ -1,0 +1,132 @@
+﻿@model IEnumerable<EcommerceMVC.Models.View.OrderDetailsView>
+
+@{
+    ViewData["Title"] = "OrderDetail";
+}
+
+<style>
+    .accordion-button {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+    }
+
+        .active,
+        .accordion-button:hover {
+            background-color: #ccc;
+        }
+
+    .accordion-panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+    }
+</style>
+
+@if (Model == null || !Model.Any())
+{
+    <section class="" style="margin-top: 4%;margin-bottom: 3%;height: 540px;">
+        <div class="row d-flex justify-content-center align-items-center ">
+            <div class="col">
+                <div class="card" style="height: 540px;">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <p class="mb-1" style="color:black;"><b>Order Details</b></p>
+                                        <p class="mb-0" style="color:black;">There are currently no items in your Order</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="h-100 h-custom" style="margin-top: 4%;margin-bottom: 3%;min-height: 540px;">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card" style="min-height: 540px;">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <p class="mb-1" style="color:black;"><b>Order Details</b></p>
+                                        @* <p class="mb-0" style="color:black;">You have @Model.Count() items in your Order Details</p> *@
+                                    </div>
+                                </div>
+
+
+                                <div class="accordion" id="accordionExample">
+                                    @{
+                                        DateTime newLastDate = Model.Max(item => item.Created_at.Date);
+                                    }
+                                    @foreach (var group in Model.GroupBy(item => item.Created_at.Date))
+                                    {
+                                        var groupId = $"flush-collapse-{group.Key.ToString("yyyyMMdd")}";
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="flush-heading-@groupId">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@groupId" aria-expanded="false" aria-controls="@groupId">
+                                                    @group.Key.ToString("MMMM dd, yyyy")
+                                                </button>
+                                            </h2>
+                                            <div id="@groupId" class="accordion-collapse collapse" aria-labelledby="flush-heading-@groupId" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    @foreach (var item in group)
+                                                    {
+                                                        <div class="card mb-3" style="border: 1px solid transparent;">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <a href="/Products/ProductDetails/@item.Product_id" style="text-decoration:none;color:black;">
+                                                                        <div class="d-flex flex-row align-items-center">
+                                                                            <div>
+                                                                                <img src="~/Images/products/@item.ImageURL" class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                                                                            </div>
+                                                                            <div class="ms-3">
+                                                                                <h6 style="margin-bottom: 0px;color:black;">@item.Title</h6>
+                                                                                <p class="small mb-0" style="color:black;">Color: @(item.Color != "-" ? item.Color : "-"), Size: @(item.Size != "-" ? item.Size : "-")</p>
+                                                                                <p class="small mb-0" style="color:black;">Price: $@item.Total_Price, Quantity: @item.Qty</p>
+                                                                                <p class="small mb-0" style="color:black;">Date: @item.Created_at.ToString("yyyy-MM-dd")</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<div id="scrollToTopBtn">
+    <span>&#8593;</span>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

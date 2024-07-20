@@ -1,0 +1,19 @@
+﻿@model int
+
+<style>
+    .iconClass {
+        position: relative;
+    }
+
+        .iconClass span {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            display: block;
+        }
+</style>
+
+<a class="nav-link nav-icon iconClass" asp-controller="User" asp-action="Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="badge badge-light">@Model</span>
+</a>

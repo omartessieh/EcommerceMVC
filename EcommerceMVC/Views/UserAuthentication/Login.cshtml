@@ -1,0 +1,36 @@
+﻿@model EcommerceMVC.Models.DTO.LoginModel
+
+<form class="form-container" asp-action="Login" method="post" style="padding-top: 15px;padding-bottom: 15px;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-title">
+        <h2>Login</h2>
+    </div>
+
+    <div class="form-group">
+        <input type="text" asp-for="Username" class="form-control" placeholder="Username" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-12">
+            <button type="submit" class="btn btn-dark">Login</button>
+            <a class="btn btn-dark" asp-action="Register" asp-controller="UserAuthentication">Register</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @if (TempData["msg"] != null)
+    {
+        <script>
+            toastr.options.positionClass = 'toast-bottom-right';
+            toastr.error('@TempData["msg"]');
+        </script>
+    }
+}
